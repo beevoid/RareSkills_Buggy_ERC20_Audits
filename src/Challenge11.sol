@@ -1,26 +1,25 @@
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 
-/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗    
-/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝    
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗      
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝      
-/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗    
-/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝    
-                                                                               
-///  ██╗ ██╗                                                                       
-/// ███║███║                                                                       
-/// ╚██║╚██║                                                                       
-///  ██║ ██║                                                                       
-///  ██║ ██║                                                                       
-///  ╚═╝ ╚═╝                                                                       
-                                                                               
+/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
+/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
+/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
+/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
+
+///  ██╗ ██╗
+/// ███║███║
+/// ╚██║╚██║
+///  ██║ ██║
+///  ██║ ██║
+///  ╚═╝ ╚═╝
+
 pragma solidity ^0.8.20;
 
 /**
  * @title Challenge11
  */
 contract Challenge11 {
-
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -72,6 +71,7 @@ contract Challenge11 {
         return true;
     }
 
+    //@audit - wrong index mapping in _allowances can leads on unlimited spending since allownce is not updated
     function transferFrom(address from, address to, uint256 value) public returns (bool) {
         _transfer(from, to, value);
         uint256 currentAllowance = _allowances[from][msg.sender];

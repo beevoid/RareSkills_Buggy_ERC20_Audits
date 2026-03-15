@@ -39,6 +39,7 @@ contract Challenge02 {
         decimals = _decimals;
     }
 
+    //@audit CRITICAL: approve allows arbitrary allowance settings for any owner
     function approve(address owner, address spender, uint256 amount) public {
         allowance[owner][spender] = amount;
         emit Approval(owner, spender, amount);
@@ -59,10 +60,11 @@ contract Challenge02 {
     function transferFrom(address from, address to, uint256 amount) public virtual returns (bool) {
         uint256 allowed = allowance[from][msg.sender];
 
-        if (allowed != type(uint256).max) allowance[from][msg.sender] = allowed - amount;
+        if (allowed != type(uint256).max) {
+            allowance[from][msg.sender] = allowed - amount;
+        }
 
         balanceOf[from] -= amount;
-
 
         unchecked {
             balanceOf[to] += amount;
@@ -72,7 +74,6 @@ contract Challenge02 {
 
         return true;
     }
-
 
     function _mint(address to, uint256 amount) internal virtual {
         totalSupply += amount;

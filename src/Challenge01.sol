@@ -10,7 +10,6 @@
 pragma solidity ^0.8.20;
 
 contract Challlenge01 {
-
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -77,12 +76,15 @@ contract Challlenge01 {
         return true;
     }
 
+    //@audit sender balance not updated
     function _transfer(address from, address to, uint256 value) internal {
         if (from == address(0)) revert InvalidSender(from);
         if (to == address(0)) revert InvalidReceiver(to);
 
         uint256 fromBalance = _balances[from];
-        if (fromBalance < value) revert InsufficientBalance(from, fromBalance, value);
+        if (fromBalance < value) {
+            revert InsufficientBalance(from, fromBalance, value);
+        }
 
         _balances[to] += value;
         emit Transfer(from, to, value);
@@ -99,7 +101,9 @@ contract Challlenge01 {
     function _spendAllowance(address owner, address spender, uint256 value) internal {
         uint256 currentAllowance = allowance(owner, spender);
         if (currentAllowance != type(uint256).max) {
-            if (currentAllowance < value) revert InsufficientAllowance(spender, currentAllowance, value);
+            if (currentAllowance < value) {
+                revert InsufficientAllowance(spender, currentAllowance, value);
+            }
             unchecked {
                 _approve(owner, spender, currentAllowance - value);
             }
@@ -117,7 +121,9 @@ contract Challlenge01 {
         if (account == address(0)) revert InvalidSender(account);
 
         uint256 accountBalance = _balances[account];
-        if (accountBalance < value) revert InsufficientBalance(account, accountBalance, value);
+        if (accountBalance < value) {
+            revert InsufficientBalance(account, accountBalance, value);
+        }
 
         _balances[account] = accountBalance - value;
         _totalSupply -= value;

@@ -2,24 +2,21 @@
 
 /// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
 /// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗  
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝  
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
 /// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
 /// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
-                                                                           
-/// ██████╗ ██████╗                                                           
-/// ██╔═████╗╚════██╗                                                          
-/// ██║██╔██║ █████╔╝                                                          
-/// ████╔╝██║ ╚═══██╗                                                          
-/// ╚██████╔╝██████╔╝                                                          
-/// ╚═════╝ ╚═════╝                                                           
-                                                                           
 
+/// ██████╗ ██████╗
+/// ██╔═████╗╚════██╗
+/// ██║██╔██║ █████╔╝
+/// ████╔╝██║ ╚═══██╗
+/// ╚██████╔╝██████╔╝
+/// ╚═════╝ ╚═════╝
 
 pragma solidity >=0.8.0;
 
 contract Challenge03 {
-
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -36,6 +33,7 @@ contract Challenge03 {
         _mint(msg.sender, 1000000 * 10 ** 18);
     }
 
+    //@audit Burn allows arbitrary balance destruction from any account
     function burn(address account, uint256 value) public {
         require(account != address(0), "Invalid burner");
         uint256 accountBalance = _balances[account];
@@ -81,7 +79,7 @@ contract Challenge03 {
         emit Approval(owner, spender, amount);
     }
 
-     function _spendAllowance(address tokenOwner, address spender, uint256 value) internal {
+    function _spendAllowance(address tokenOwner, address spender, uint256 value) internal {
         uint256 currentAllowance = allowance(tokenOwner, spender);
         if (currentAllowance != type(uint256).max) {
             require(currentAllowance >= value, "Challenge3: insufficient allowance");

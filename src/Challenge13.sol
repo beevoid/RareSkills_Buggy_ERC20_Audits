@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 
-/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗    
-/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝    
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗      
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝      
-/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗    
-/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝    
-                                                                               
-///  ██╗██████╗                                                                    
-///  ███║╚════██╗                                                                   
-///  ██║ █████╔╝                                                                   
-///  ██║ ╚═══██╗                                                                   
-///  ██║██████╔╝                                                                   
-///  ╚═╝╚═════╝                                                                    
-                                                                            
+/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
+/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
+/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
+/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
+
+///  ██╗██████╗
+///  ███║╚════██╗
+///  ██║ █████╔╝
+///  ██║ ╚═══██╗
+///  ██║██████╔╝
+///  ╚═╝╚═════╝
+
 pragma solidity >=0.8.0;
 
 /// @notice Modern and gas efficient ERC20
@@ -40,6 +40,7 @@ contract Challenge13 {
         decimals = _decimals;
     }
 
+    //@audit - wrong indexing in allowance makes tranferForm unusable
     function approve(address spender, uint256 amount) public virtual returns (bool) {
         allowance[spender][msg.sender] = amount;
 
@@ -61,9 +62,11 @@ contract Challenge13 {
     }
 
     function transferFrom(address from, address to, uint256 amount) public virtual returns (bool) {
-        uint256 allowed = allowance[from][msg.sender]; 
+        uint256 allowed = allowance[from][msg.sender];
 
-        if (allowed != type(uint256).max) allowance[from][msg.sender] = allowed - amount;
+        if (allowed != type(uint256).max) {
+            allowance[from][msg.sender] = allowed - amount;
+        }
 
         balanceOf[from] -= amount;
 

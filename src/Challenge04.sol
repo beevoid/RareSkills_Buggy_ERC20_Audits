@@ -1,27 +1,22 @@
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 
-
-
 /// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
 /// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗  
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝  
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
 /// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
 /// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
-                                                                           
-///  ██████╗ ██╗  ██╗                                                          
-/// ██╔═████╗██║  ██║                                                          
-/// ██║██╔██║███████║                                                          
-/// ████╔╝██║╚════██║                                                          
-/// ╚██████╔╝     ██║                                                          
-///  ╚═════╝      ╚═╝                                                          
-                                                                           
 
+///  ██████╗ ██╗  ██╗
+/// ██╔═████╗██║  ██║
+/// ██║██╔██║███████║
+/// ████╔╝██║╚════██║
+/// ╚██████╔╝     ██║
+///  ╚═════╝      ╚═╝
 
 pragma solidity ^0.8.20;
 
 contract Challenge04 {
-
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Paused(address account);
@@ -36,7 +31,6 @@ contract Challenge04 {
 
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
-
 
     function totalSupply() public view returns (uint256) {
         return _totalSupply;
@@ -83,6 +77,7 @@ contract Challenge04 {
         return true;
     }
 
+    //@audit transfrom bypasses pause mechanism
     function transferFrom(address from, address to, uint256 value) public returns (bool) {
         _spendAllowance(from, msg.sender, value);
         _transfer(from, to, value);

@@ -1,24 +1,23 @@
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 
-/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗    
-/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝    
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗      
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝      
-/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗    
-/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝    
-                                                                               
-///  ██╗██╗  ██╗                                                                   
-/// ███║██║  ██║                                                                   
-/// ╚██║███████║                                                                   
-///  ██║╚════██║                                                                   
-///  ██║     ██║                                                                   
-///  ╚═╝     ╚═╝                                                                   
-                                                                               
+/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
+/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
+/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
+/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
+
+///  ██╗██╗  ██╗
+/// ███║██║  ██║
+/// ╚██║███████║
+///  ██║╚════██║
+///  ██║     ██║
+///  ╚═╝     ╚═╝
+
 pragma solidity >=0.8.0;
 
 /// @notice Modern and gas efficient ERC20
 contract Challenge14 {
-
     event Transfer(address indexed from, address indexed to, uint256 amount);
 
     event Approval(address indexed owner, address indexed spender, uint256 amount);
@@ -61,10 +60,13 @@ contract Challenge14 {
         return true;
     }
 
+    //@audit - allowance is decrease only when allowance == max, since the condition always be false, allowing spender to re-use infinitely
     function transferFrom(address from, address to, uint256 amount) public virtual returns (bool) {
         uint256 allowed = allowance[from][msg.sender];
 
-        if (allowed == type(uint256).max) allowance[from][msg.sender] = allowed - amount;
+        if (allowed == type(uint256).max) {
+            allowance[from][msg.sender] = allowed - amount;
+        }
 
         balanceOf[from] -= amount;
 

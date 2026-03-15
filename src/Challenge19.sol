@@ -1,24 +1,26 @@
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 
-/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗    
-/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝    
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗      
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝      
-/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗    
-/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝    
-                                                                               
-///  ██╗ █████╗                                                                    
-/// ███║██╔══██╗                                                                   
-/// ╚██║╚██████║                                                                   
-///  ██║ ╚═══██║                                                                   
-///  ██║ █████╔╝                                                                   
-///  ╚═╝ ╚════╝                                                                    
-                                                                               
+/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
+/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
+/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
+/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
+
+///  ██╗ █████╗
+/// ███║██╔══██╗
+/// ╚██║╚██████║
+///  ██║ ╚═══██║
+///  ██║ █████╔╝
+///  ╚═╝ ╚════╝
+
 pragma solidity ^0.8.20;
 
 /**
  * @title Challenge19
  */
+
+//@audit-ok - No Bug
 contract Challenge19 {
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
@@ -91,28 +93,21 @@ contract Challenge19 {
         return true;
     }
 
-    function _transfer(
-          address from,
-          address to,
-          uint256 amount
-    ) internal virtual {
+    function _transfer(address from, address to, uint256 amount) internal virtual {
         require(from != address(0), "ERC20: transfer from the zero address");
         require(to != address(0), "ERC20: transfer to the zero address");
-    
+
         uint256 fromBalance = _balances[from];
         uint256 toBalance = _balances[to];
 
-        require(
-            fromBalance >= amount,
-            "ERC20: transfer amount exceeds balance"
-        );
+        require(fromBalance >= amount, "ERC20: transfer amount exceeds balance");
         unchecked {
             _balances[from] = fromBalance - amount;
             // Overflow not possible: the sum of all balances is capped by totalSupply, and the sum is preserved by
             // decrementing then incrementing.
             _balances[to] = toBalance + amount;
         }
-    
+
         emit Transfer(from, to, amount);
     }
 

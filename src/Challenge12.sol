@@ -1,24 +1,23 @@
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 
-/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗    
-/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝    
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗      
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝      
-/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗    
-/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝    
-                                                                               
-///  ██╗██████╗                                                                    
-/// ███║╚════██╗                                                                   
-/// ╚██║ █████╔╝                                                                   
-///  ██║██╔═══╝                                                                    
-///  ██║███████╗                                                                   
-///  ╚═╝╚══════╝                                                                   
-                                                                               
+/// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
+/// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
+/// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
+/// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
+
+///  ██╗██████╗
+/// ███║╚════██╗
+/// ╚██║ █████╔╝
+///  ██║██╔═══╝
+///  ██║███████╗
+///  ╚═╝╚══════╝
+
 pragma solidity >=0.8.0;
 
 /// @notice Modern and gas efficient ERC20
 contract Challenge12 {
-
     event Transfer(address indexed from, address indexed to, uint256 amount);
 
     event Approval(address indexed owner, address indexed spender, uint256 amount);
@@ -57,6 +56,8 @@ contract Challenge12 {
         return true;
     }
 
+    //@audit - total supply is not updated causing incorrect supply accounting
+    //@audit - gift should use _mint to maintain supply invariant
     function gift(address to, uint256 amount) public onlyOwner {
         balanceOf[to] += amount;
 
@@ -76,9 +77,11 @@ contract Challenge12 {
     }
 
     function transferFrom(address from, address to, uint256 amount) public virtual returns (bool) {
-        uint256 allowed = allowance[from][msg.sender]; 
+        uint256 allowed = allowance[from][msg.sender];
 
-        if (allowed != type(uint256).max) allowance[from][msg.sender] = allowed - amount;
+        if (allowed != type(uint256).max) {
+            allowance[from][msg.sender] = allowed - amount;
+        }
 
         balanceOf[from] -= amount;
         balanceOf[to] += amount;

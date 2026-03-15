@@ -2,22 +2,21 @@
 
 /// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
 /// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗  
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝  
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
 /// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
 /// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
-                                                                           
-/// ██████╗  ███████╗                                                          
-/// ██╔═████╗██╔════╝                                                          
-/// ██║██╔██║███████╗                                                          
-/// ████╔╝██║╚════██║                                                          
-/// ╚██████╔╝███████║                                                          
-/// ╚═════╝ ╚══════╝                                                          
-                                                                           
+
+/// ██████╗  ███████╗
+/// ██╔═████╗██╔════╝
+/// ██║██╔██║███████╗
+/// ████╔╝██║╚════██║
+/// ╚██████╔╝███████║
+/// ╚═════╝ ╚══════╝
+
 pragma solidity ^0.8.20;
 
 contract Challenge05 {
-
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -59,10 +58,11 @@ contract Challenge05 {
 
     function transferFrom(address from, address to, uint256 value) public returns (bool) {
         _spendAllowance(from, msg.sender, value);
+        //@audit using wrong parameter order, amount is being transferred to -> from instead of from -> to
         _transfer(to, from, value);
         return true;
-    }   
-    
+    }
+
     function _transfer(address from, address to, uint256 value) internal {
         require(to != address(0), "Challenge5: transfer to zero address");
         uint256 fromBalance = _balances[from];

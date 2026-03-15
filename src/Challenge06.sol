@@ -2,22 +2,21 @@
 
 /// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
 /// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗  
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝  
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
 /// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
 /// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
-                                                                           
-/// ██████╗  ██████╗                                                          
-/// ██╔═████╗██╔════╝                                                          
-/// ██║██╔██║███████╗                                                          
-/// ████╔╝██║██╔═══██╗                                                         
-/// ╚██████╔╝╚██████╔╝                                                         
-/// ╚═════╝  ╚═════╝                                                          
-                                                                           
+
+/// ██████╗  ██████╗
+/// ██╔═████╗██╔════╝
+/// ██║██╔██║███████╗
+/// ████╔╝██║██╔═══██╗
+/// ╚██████╔╝╚██████╔╝
+/// ╚═════╝  ╚═════╝
+
 pragma solidity ^0.8.20;
 
 contract Challenge06 {
-    
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Blacklisted(address indexed account);
@@ -74,6 +73,7 @@ contract Challenge06 {
         return true;
     }
 
+    //@audit doesnt check whether the tokenowner is blacklisted or not
     function transferFrom(address from, address to, uint256 value) public returns (bool) {
         require(!blacklist[msg.sender] && !blacklist[to], "Sender or receiver blacklisted");
         _spendAllowance(from, msg.sender, value);

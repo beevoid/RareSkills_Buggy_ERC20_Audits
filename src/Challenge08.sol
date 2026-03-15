@@ -2,22 +2,21 @@
 
 /// ██████╗ ██╗  ██╗ █████╗ ██╗     ██╗     ███████╗███╗   ██╗ ██████╗ ███████╗
 /// ██╔════╝██║  ██║██╔══██╗██║     ██║     ██╔════╝████╗  ██║██╔════╝ ██╔════╝
-/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗  
-/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝  
+/// ██║     ███████║███████║██║     ██║     █████╗  ██╔██╗ ██║██║  ███╗█████╗
+/// ██║     ██╔══██║██╔══██║██║     ██║     ██╔══╝  ██║╚██╗██║██║   ██║██╔══╝
 /// ╚██████╗██║  ██║██║  ██║███████╗███████╗███████╗██║ ╚████║╚██████╔╝███████╗
 /// ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
-                                                                           
-///  ██████╗  █████╗                                                           
-/// ██╔═████╗██╔══██╗                                                          
-/// ██║██╔██║╚█████╔╝                                                          
-/// ████╔╝██║██╔══██╗                                                          
-/// ╚██████╔╝╚█████╔╝                                                          
-///  ╚═════╝  ╚════╝                                                           
-                                                                           
+
+///  ██████╗  █████╗
+/// ██╔═████╗██╔══██╗
+/// ██║██╔██║╚█████╔╝
+/// ████╔╝██║██╔══██╗
+/// ╚██████╔╝╚█████╔╝
+///  ╚═════╝  ╚════╝
+
 pragma solidity ^0.8.20;
 
 contract Challenge08 {
-
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -82,6 +81,7 @@ contract Challenge08 {
         return true;
     }
 
+    //@audit - Burn does not decrease totalsupply
     function burn(uint256 value) public {
         _balances[msg.sender] -= value;
         emit Transfer(msg.sender, address(0), value);
@@ -92,7 +92,9 @@ contract Challenge08 {
         if (to == address(0)) revert ERC20InvalidReceiver(to);
 
         uint256 fromBalance = _balances[from];
-        if (fromBalance < value) revert ERC20InsufficientBalance(from, fromBalance, value);
+        if (fromBalance < value) {
+            revert ERC20InsufficientBalance(from, fromBalance, value);
+        }
 
         _balances[from] = fromBalance - value;
         _balances[to] += value;
